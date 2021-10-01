@@ -3,13 +3,12 @@
 namespace Bogardo\Mailgun\Mail;
 
 use Illuminate\Contracts\Config\Repository as Config;
-use Mailgun\Messages\MessageBuilder;
 
 class Message
 {
 
     /**
-     * @var \Mailgun\Messages\MessageBuilder
+     * @var \Bogardo\Mailgun\Mail\MessageBuilder
      */
     protected $messageBuilder;
 
@@ -21,7 +20,7 @@ class Message
     /**
      * Message constructor.
      *
-     * @param \Mailgun\Messages\MessageBuilder        $messageBuilder
+     * @param \Bogardo\Mailgun\Mail\MessageBuilder    $messageBuilder
      * @param \Illuminate\Contracts\Config\Repository $config
      */
     public function __construct(MessageBuilder $messageBuilder, Config $config)
@@ -165,6 +164,21 @@ class Message
     public function attach($path, $name = '')
     {
         $this->messageBuilder->addAttachment($path, $name);
+
+        return $this;
+    }
+
+    /**
+     * Attach a file data to the message.
+     *
+     * @param string $data
+     * @param string $name
+     *
+     * @return \Bogardo\Mailgun\Mail\Message
+     */
+    public function attachData($data, $name = '')
+    {
+        $this->messageBuilder->addAttachmentData($data, $name);
 
         return $this;
     }
