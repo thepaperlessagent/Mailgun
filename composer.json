@@ -1,5 +1,5 @@
 {
-    "name": "bogardo/mailgun",
+    "name": "panacea-bogardo/mailgun",
     "description": "Laravel package for sending mail via the Mailgun API",
     "keywords": [
         "mailgun",
