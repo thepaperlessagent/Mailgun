@@ -17,6 +17,8 @@
             "homepage": "http://bogardo.com/"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": ">=5.5.9",
         "illuminate/support": "~5.1|^6.0",
