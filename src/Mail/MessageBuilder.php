@@ -2,7 +2,7 @@
 
 namespace Bogardo\Mailgun\Mail;
 
-class MessageBuilder extends \Mailgun\Message\MessageBuilder
+class MessageBuilder extends \Mailgun\Messages\MessageBuilder
 {
     /**
      * @param string      $attachmentData
