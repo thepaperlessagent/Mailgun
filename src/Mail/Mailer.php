@@ -52,7 +52,7 @@ class Mailer
      * @param \Closure     $callback
      * @param null         $message
      *
-     * @return \Bogardo\Mailgun\Http\Response
+     * @return Response
      */
     public function send($view, array $data, Closure $callback, $message = null)
     {
@@ -62,12 +62,10 @@ class Mailer
         $this->renderBody($view, $data);
 
         $message = $this->message->getMessage();
-        $files = $this->message->getFiles();
 
         $domain = $this->config->get('mailgun.domain');
-        $response = new Response($this->mailgun->post("{$domain}/messages", $message, $files));
+        return new Response($this->mailgun->messages()->send($domain, $message));
 
-        return $response;
     }
 
     /**
@@ -76,7 +74,7 @@ class Mailer
      * @param array                      $data
      * @param \Closure                   $callback
      *
-     * @return \Bogardo\Mailgun\Http\Response
+     * @return Response
      */
     public function later($time, $view, array $data, Closure $callback)
     {

@@ -392,6 +392,16 @@ class Message
             $message['o:native-send'] = $this->{'o:native-send'};
         }
 
+        $files = $this->messageBuilder->getFiles();
+        if (count( $files) > 0) {
+                $message["attachment"][] = $files;
+        }
+
+        echo "<pre>";
+        var_dump($message);
+        echo "</pre>";
+        die();
+
         return $message;
     }
 

@@ -2,7 +2,7 @@
 
 namespace Bogardo\Mailgun\Mail;
 
-class MessageBuilder extends \Mailgun\Messages\MessageBuilder
+class MessageBuilder extends \Mailgun\Message\MessageBuilder
 {
     /**
      * @param string      $attachmentData
@@ -28,5 +28,9 @@ class MessageBuilder extends \Mailgun\Messages\MessageBuilder
         }
 
         return true;
+    }
+
+    public function getFiles() {
+        return isset( $this->message['attachment'] ) ? $this->message['attachment'] : [];
     }
 }

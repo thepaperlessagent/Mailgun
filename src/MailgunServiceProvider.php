@@ -5,6 +5,8 @@ namespace Bogardo\Mailgun;
 use Bogardo\Mailgun\Contracts\Mailgun as MailgunContract;
 use Illuminate\Support\ServiceProvider;
 use Mailgun\Mailgun as MailgunApi;
+use Mailgun\HttpClient\HttpClientConfigurator;
+use Mailgun\Hydrator\NoopHydrator;
 
 class MailgunServiceProvider extends ServiceProvider
 {
@@ -38,19 +40,23 @@ class MailgunServiceProvider extends ServiceProvider
         /** @var \Illuminate\Config\Repository $config */
         $config = $this->app->make('config');
 
+
+
+
         /**
          * Register main Mailgun service
          */
         $this->app->bind('mailgun', function () use ($config) {
-            $clientAdapter = $this->app->make('mailgun.client');
+            $configurator = new HttpClientConfigurator();
+//            $configurator->setEndpoint( $config->get( 'mailgun.api.endpoint' ) );
+            $configurator->setApiKey( $config->get( 'mailgun.api_key' ) );
+            $configurator->setDebug( false );
+            $configurator->setHttpClient( $this->app->make( 'mailgun.client' ) );
 
-            $mg = new MailgunApi(
-                $config->get('mailgun.api_key'),
-                $clientAdapter,
-                $config->get('mailgun.api.endpoint')
-            );
-            $mg->setApiVersion($config->get('mailgun.api.version'));
-            $mg->setSslEnabled($config->get('mailgun.api.ssl', true));
+            $mg = new MailgunApi( $configurator, new NoopHydrator());
+
+//            $mg->setApiVersion($config->get('mailgun.api.version'));
+//            $mg->setSslEnabled($config->get('mailgun.api.ssl', true));
 
             return new Service($mg, $this->app->make('view'), $config);
         });
@@ -59,17 +65,14 @@ class MailgunServiceProvider extends ServiceProvider
          * Register the public Mailgun service
          */
         $this->app->bind('mailgun.public', function () use ($config) {
-            $clientAdapter = $this->app->make('mailgun.client');
+            $configurator = new HttpClientConfigurator();
+//            $configurator->setEndpoint( $config->get( 'mailgun.api.endpoint' ) );
+            $configurator->setApiKey( $config->get( 'mailgun.public_api_key' ) );
+            $configurator->setDebug( false );
+            $configurator->setHttpClient( $this->app->make( 'mailgun.client' ) );
 
-            $mg = new MailgunApi(
-                $config->get('mailgun.public_api_key'),
-                $clientAdapter,
-                $config->get('mailgun.api.endpoint')
-            );
-            $mg->setApiVersion($config->get('mailgun.api.version'));
-            $mg->setSslEnabled($config->get('mailgun.api.ssl', true));
+            return new MailgunApi( $configurator, new NoopHydrator() );
 
-            return $mg;
         });
 
         $this->app->bind(MailgunContract::class, 'mailgun');

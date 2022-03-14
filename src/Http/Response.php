@@ -31,11 +31,13 @@ class Response
     /**
      * @param \stdClass $response
      */
-    public function __construct(stdClass $response)
+    public function __construct( \GuzzleHttp\Psr7\Response $response)
     {
-        $this->status = $response->http_response_code;
-        $this->message = property_exists($response->http_response_body, 'message') ? $response->http_response_body->message : '';
-        $this->id = property_exists($response->http_response_body, 'id') ? $response->http_response_body->id : '';
+        $http_response_body = json_decode( $response->getBody() );
+
+        $this->status = $response->getStatusCode();
+        $this->message = property_exists( $http_response_body, 'message') ? $http_response_body->message : '';
+        $this->id = property_exists( $http_response_body, 'id') ? $http_response_body->id : '';
         $this->data = null;
     }
 
